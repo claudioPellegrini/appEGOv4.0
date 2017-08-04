@@ -4,6 +4,7 @@ class MenusController < ApplicationController
   # GET /menus
   # GET /menus.json
   def index
+    control_usuario
     @menus = Menu.order('fecha DESC').all
     @productos = Producto.all
     @tiene_productos = TieneProducto.all
@@ -25,12 +26,14 @@ class MenusController < ApplicationController
   # GET /menus/1
   # GET /menus/1.json
   def show
+    control_usuario
     @tipos = Tipo.all
   end
 
 
   # GET /menus/new
   def new
+    control_usuario
     @menu = Menu.new
     @productos = Producto.all
     @tipos = Tipo.all
@@ -38,6 +41,7 @@ class MenusController < ApplicationController
 
   # GET /menus/1/edit
   def edit
+    control_usuario
     @productos = Producto.all
     @tipos = Tipo.all
     
@@ -46,6 +50,7 @@ class MenusController < ApplicationController
   # POST /menus
   # POST /menus.json
   def create
+    control_usuario
     @tipos = Tipo.all
     @productos = Producto.all
     @menu = Menu.new(menu_params)
@@ -69,6 +74,7 @@ class MenusController < ApplicationController
   # PATCH/PUT /menus/1
   # PATCH/PUT /menus/1.json
   def update
+    control_usuario
     @tipos = Tipo.all
     @productos = Producto.all
     respond_to do |format|
@@ -87,6 +93,7 @@ class MenusController < ApplicationController
   # DELETE /menus/1
   # DELETE /menus/1.json
   def destroy
+    control_usuario
     @menu.destroy
     respond_to do |format|
       format.html { redirect_to menus_url, notice: 'El Menu se ha eliminado correctamente.' }
@@ -110,7 +117,7 @@ class MenusController < ApplicationController
         file << pdf
       end
       #descomentar para q mande los correos
-    # enviar_correos
+    enviar_correos
   end
 
 
@@ -127,6 +134,22 @@ class MenusController < ApplicationController
     
     CuentaMailer.mailing(@destinatarios, @menu).deliver_now
   end
+
+
+
+  # control de tipo de usuario logueado
+  def control_usuario    
+    usuarios = Usuario.all
+    usuarios.each do |u|
+      if cuentum_signed_in? && current_cuentum.id == u.cuenta_id
+        if u.rol == "USUARIO" 
+              redirect_to "welcome/index"         
+        end
+      end
+    end
+  end
+
+  
 
   private
     # Use callbacks to share common setup or constraints between actions.

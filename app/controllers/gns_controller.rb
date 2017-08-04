@@ -1,4 +1,7 @@
 class GnsController < ApplicationController
+	def index
+		control_usuario
+	end
 
 	def consumos
 		$fechaInicial = nil
@@ -39,7 +42,17 @@ class GnsController < ApplicationController
     	end    	
     end
 
-    
+    # control de tipo de usuario logueado
+	  def control_usuario    
+	    usuarios = Usuario.all
+	    usuarios.each do |u|
+	      if cuentum_signed_in? && current_cuentum.id == u.cuenta_id
+	        if u.rol == "USUARIO" 
+	              redirect_to "welcome/index"         
+	        end
+	      end
+	    end
+	  end
 
 
     # Control que evita que se ingrese una fecha no valida en el select, por ejemplo 31 de febrero

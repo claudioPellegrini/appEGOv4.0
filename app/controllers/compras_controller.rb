@@ -61,6 +61,7 @@ class ComprasController < ApplicationController
 
   # GET /compras/new
   def new
+    control_usuario
     menu = Menu.find_by(fecha: Time.now.to_date)
     franjaActual = Franja.last
     if menu == nil
