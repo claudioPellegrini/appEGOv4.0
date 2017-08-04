@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170718002456) do
+ActiveRecord::Schema.define(version: 20170731164936) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,6 +36,7 @@ ActiveRecord::Schema.define(version: 20170718002456) do
     t.integer  "bebida_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "cantidad"
     t.index ["bebida_id"], name: "index_compra_bebidas_on_bebida_id", using: :btree
     t.index ["compra_id"], name: "index_compra_bebidas_on_compra_id", using: :btree
   end
@@ -55,8 +56,8 @@ ActiveRecord::Schema.define(version: 20170718002456) do
     t.datetime "updated_at",         null: false
     t.integer  "cuenta_id"
     t.integer  "cuentum_id"
-    t.integer  "calificacion"
     t.integer  "valor_final_ticket"
+    t.string   "estado"
     t.index ["cuenta_id"], name: "index_compras_on_cuenta_id", using: :btree
     t.index ["cuentum_id"], name: "index_compras_on_cuentum_id", using: :btree
   end
@@ -102,11 +103,30 @@ ActiveRecord::Schema.define(version: 20170718002456) do
     t.datetime "updated_at",     null: false
   end
 
+  create_table "fringes", force: :cascade do |t|
+    t.datetime "fecha"
+    t.decimal  "primera_hasta"
+    t.decimal  "primera_precio"
+    t.decimal  "segunda_hasta"
+    t.decimal  "segunda_precio"
+    t.decimal  "tercera_precio"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
   create_table "menus", force: :cascade do |t|
     t.date     "fecha"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["fecha"], name: "index_menus_on_fecha", unique: true, using: :btree
+  end
+
+  create_table "movimientos", force: :cascade do |t|
+    t.integer  "id_bebida"
+    t.datetime "fecha"
+    t.integer  "cant"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "productos", force: :cascade do |t|
@@ -115,7 +135,6 @@ ActiveRecord::Schema.define(version: 20170718002456) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.integer  "tipo_id"
-    t.decimal  "precio"
     t.index ["tipo_id"], name: "index_productos_on_tipo_id", using: :btree
   end
 
